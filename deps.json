@@ -1,0 +1,24 @@
+{
+    "deps": [
+        "libstdc++6",
+        {
+            "name": "libpigpio1",
+            "arch": [
+                "armhf",
+                "arm64"
+            ]
+        }
+    ],
+    "build_deps": [
+        {
+            "name": "libpigpio-dev",
+            "arch": [
+                "armhf",
+                "arm64"
+            ]
+        },
+        "libfmt-dev",
+        "catch2",
+        "librange-v3-dev"
+    ]
+}

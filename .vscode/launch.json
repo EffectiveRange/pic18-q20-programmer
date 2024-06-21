@@ -1,0 +1,67 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch  (picprogrammer)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/picprogrammer",
+            "args": [
+                "-i"
+                // "${workspaceFolder}/MrHat.X.production.hex",
+                // "--hex"
+            ],
+            "environment": [
+                {
+                    "name": "MOCK_GPIO_INPUT_HEX",
+                    "value": "${workspaceFolder}/resource/full_mem.hex"
+                }
+            ],
+            "cwd": "${workspaceFolder}",
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    },
+                ]
+            }
+        },
+        {
+            "name": "C++ Launch  (picprogrammer-programming)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/picprogrammer",
+            "args": [
+                "-f",
+                "${workspaceFolder}/resource/MrHat.X.production.hex",
+                "--hex",
+                "--write"
+            ],
+            "environment": [
+                {
+                    "name": "MOCK_GPIO_INPUT_HEX",
+                    "value": "${workspaceFolder}/resource/clean_mem.hex"
+                }
+            ],
+            "cwd": "${workspaceFolder}",
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    },
+                ]
+            }
+        }
+    ]
+}

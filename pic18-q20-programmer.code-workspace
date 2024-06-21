@@ -1,0 +1,63 @@
+{
+    "folders": [
+        {
+            "path": "./",
+        },
+    ],
+    "settings": {
+        "search.exclude": {
+            "**/.cache": true,
+            "**/build": true,
+            "**/compile_commands.json": true
+        },
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/.cache": true,
+            "**/build": true,
+            "**/compile_commands.json": true
+        },
+        "scad-lsp.fmtStyle": "Microsoft",
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic",
+        "terminal.integrated.profiles.linux": {
+            "bash": {
+                "path": "bash",
+                "icon": "terminal-bash",
+                "args": [
+                    "-l"
+                ]
+            },
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.associations": {
+            "mutex": "cpp",
+            "stdexcept": "cpp",
+            "iostream": "cpp",
+            "bitset": "cpp"
+        },
+        "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+        "cmake.debugConfig": {
+            "args": [
+                "--help",
+                "-f",
+                "${workspaceFolder}/MrHat.X.production.hex",
+                "--hex"
+            ]
+        },
+        "clangd.arguments": [
+            "--query-driver=/usr/bin/arm*g*",
+            "--background-index",
+            "--completion-style=detailed",
+            "--header-insertion=iwyu",
+            "-j=4",
+            "--pch-storage=memory",
+            "--malloc-trim",
+            "--log=error"
+        ]
+    }
+}

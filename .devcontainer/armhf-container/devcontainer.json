@@ -1,0 +1,62 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
+{
+	"name": "ARMHF-Cross",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"USERNAME": "${env:USER}",
+			// NOTE: if user GID != UID we'll get issues
+			// TODO: figure out a way to get the user's GID
+			"USER_UID": "1000",
+			"GITHUB_ACTION": "${env:GITHUB_ACTION}",
+		},
+	},
+	"runArgs": [
+		"--privileged",
+		"--net=host"
+	],
+	"remoteUser": "${env:USER}",
+	"mounts": [
+		"type=bind,source=${env:HOME},target=${env:HOME}"
+	]
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "gcc -v",
+	// Configure tool-specific properties.
+	,
+	"containerEnv": {
+		"CMAKE_TOOLCHAIN_FILE": "/usr/share/cmake/toolchain.cmake",
+		"CMAKE_GENERATOR": "Ninja"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"jeff-hykin.better-cpp-syntax",
+				"ms-python.black-formatter",
+				"ms-vscode.cpptools-extension-pack",
+				"matepek.vscode-catch2-test-adapter",
+				"xaver.clang-format",
+				"ms-vscode.cmake-tools",
+				"streetsidesoftware.code-spell-checker",
+				"ms-vscode-remote.remote-containers",
+				"ms-azuretools.vscode-docker",
+				"eamodio.gitlens",
+				"ms-vsliveshare.vsliveshare",
+				"ms-python.python",
+				"ms-vscode-remote.vscode-remote-extensionpack",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"GitHub.copilot-chat",
+				"GitHub.copilot",
+				"github.vscode-github-actions",
+				"GitHub.vscode-pull-request-github",
+				"EffectiveRangeLLC.erdev"
+			],
+		}
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
