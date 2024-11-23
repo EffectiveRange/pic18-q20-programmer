@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            arch: ["armhf", "amd64"]
+            arch: ["armhf", "amd64", "arm64"]
     permissions:
       contents: write
       discussions: write
