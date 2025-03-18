@@ -56,7 +56,7 @@ void PiGPIO::set_gpio_mode(port_id_t port, Modes mode) {
   ensure_running();
   if (const auto res = gpioSetMode(port, translate_mode(mode)); res != 0) {
     const auto msg = fmt::format(
-        "Failed to set GPIO mode {} on port {} (error: {}) ", mode, port, res);
+        "Failed to set GPIO mode {} on port {} (error: {}) ", translate_mode(mode), port, res);
     throw std::runtime_error(msg);
   }
 }
