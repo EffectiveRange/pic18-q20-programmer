@@ -22,6 +22,6 @@ on:
 
 jobs:
  call_ci:
-  uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@v3
+  uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@v4
   with:
     build-version: '["armhf-bookworm", "amd64-bookworm","armhf-bullseye", "amd64-bullseye"]'
