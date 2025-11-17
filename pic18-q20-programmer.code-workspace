@@ -58,6 +58,7 @@
             "--pch-storage=memory",
             "--malloc-trim",
             "--log=error"
-        ]
+        ],
+        "editor.formatOnSave": true
     }
 }

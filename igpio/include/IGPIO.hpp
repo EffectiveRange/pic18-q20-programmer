@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #pragma once
 
@@ -28,7 +28,10 @@ struct IGPIO {
   using port_id_t = unsigned;
   using val_t = unsigned;
 
-  virtual void set_gpio_mode(port_id_t port, Modes mode) = 0;
+  virtual void set_gpio_mode(port_id_t port, Modes mode, val_t initial) = 0;
+  void set_gpio_mode(port_id_t port, Modes mode) {
+    set_gpio_mode(port, mode, 0);
+  }
   virtual void gpio_write(port_id_t gpio, val_t val) = 0;
   virtual val_t gpio_read(port_id_t gpio) = 0;
 

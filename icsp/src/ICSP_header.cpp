@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #include "Region.hpp"
 #include <IGPIO.hpp>
@@ -17,8 +17,7 @@
 
 void ICSPHeader::setup_programming() {
   if (pins.prog_en_pin) {
-    igpio->set_gpio_mode(pins.prog_en_pin.value(), IGPIO::Modes::OUTPUT);
-    igpio->gpio_write(pins.prog_en_pin.value(), 0);
+    igpio->set_gpio_mode(pins.prog_en_pin.value(), IGPIO::Modes::OUTPUT, 0);
   }
 }
 
@@ -35,13 +34,10 @@ void ICSPHeader::disable_programming() {
 }
 
 void ICSPHeader::cleanup_gpio() {
-  igpio->set_gpio_mode(pins.mclr_pin, IGPIO::Modes::OUTPUT);
-  igpio->set_gpio_mode(pins.clk_pin, IGPIO::Modes::OUTPUT);
-  igpio->set_gpio_mode(pins.data_pin, IGPIO::Modes::OUTPUT);
-  /// Set up initial values
-  igpio->gpio_write(pins.mclr_pin, 1);
-  igpio->gpio_write(pins.clk_pin, 0);
-  igpio->gpio_write(pins.data_pin, 0);
+  /// Request pins and set up initial values
+  igpio->set_gpio_mode(pins.mclr_pin, IGPIO::Modes::OUTPUT, 1);
+  igpio->set_gpio_mode(pins.clk_pin, IGPIO::Modes::OUTPUT, 0);
+  igpio->set_gpio_mode(pins.data_pin, IGPIO::Modes::OUTPUT, 0);
   setup_programming();
 }
 ICSPHeader::ICSPHeader(IGPIO::Ptr igp, ICSPPins pins)
@@ -109,8 +105,7 @@ auto ICSPHeader::read_transaction(bool increment_pc) -> read_t {
   igpio->set_gpio_mode(pins.data_pin, IGPIO::Modes::INPUT);
 
   finally restore_data_gpio_mode{[this]() {
-    igpio->set_gpio_mode(pins.data_pin, IGPIO::Modes::OUTPUT);
-    igpio->gpio_write(pins.data_pin, 0);
+    igpio->set_gpio_mode(pins.data_pin, IGPIO::Modes::OUTPUT, 0);
     igpio->gpio_write(pins.clk_pin, 0);
   }};
 

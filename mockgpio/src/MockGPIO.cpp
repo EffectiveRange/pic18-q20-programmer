@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 #include "IntelHex.hpp"
 #include "PIC18-Q20.hpp"
 #include <ICSP_header.hpp>
@@ -49,7 +49,7 @@ void MockGPIO::load_mock_buffer() {
     }
   }
 }
-auto IGPIO::Create() -> Ptr {
+__attribute__((weak)) auto IGPIO::Create() -> Ptr {
   auto gpio = MockGPIO::Create();
   gpio->pic = std::make_unique<MockPIC18Q20>(gpio.get(), ICSPPins{});
   gpio->load_mock_buffer();
@@ -60,13 +60,16 @@ std::shared_ptr<MockGPIO> MockGPIO::Create() {
   return std::make_shared<MockGPIO>();
 }
 
-void MockGPIO::set_gpio_mode(port_id_t port, Modes mode) {
+void MockGPIO::set_gpio_mode(port_id_t port, Modes mode, val_t initial) {
   ensure_running();
   if (auto it = m_gpios.find(port); it != m_gpios.end()) {
     it->second.listener->onModeChange(it->second, mode);
     it->second.mode = mode;
   } else {
     m_gpios.emplace(port, GPIOState{port, mode});
+  }
+  if (mode == Modes::OUTPUT) {
+    gpio_write(port, initial);
   }
 }
 

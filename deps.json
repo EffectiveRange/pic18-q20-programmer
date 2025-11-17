@@ -4,7 +4,12 @@
         {
             "name": "libpigpio1",
             "arch": [
-                "armhf",
+                "armhf"
+            ]
+        },
+        {
+            "name": "libgpiod2",
+            "arch": [
                 "arm64"
             ]
         }
@@ -13,7 +18,12 @@
         {
             "name": "libpigpio-dev",
             "arch": [
-                "armhf",
+                "armhf"
+            ]
+        },
+        {
+            "name": "libgpiod-dev",
+            "arch": [
                 "arm64"
             ]
         },

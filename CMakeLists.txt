@@ -20,6 +20,8 @@ find_package(fmt REQUIRED)
 
 find_package(Catch2  REQUIRED)
 
+find_package(PkgConfig REQUIRED)
+
 # fetch latest argparse
 include(FetchContent)
 FetchContent_Declare(
@@ -37,8 +39,13 @@ add_subdirectory(mockgpio)
 
 add_subdirectory(pigpio)
 
+add_subdirectory(libgpiod)
 
-target_link_libraries(picprogrammer fmt::fmt argparse )
+
+
+
+target_link_libraries(picprogrammer icsp igpio fmt::fmt argparse mockgpio )
+
 
 target_include_directories(picprogrammer PRIVATE  include)
 

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #include "PiGPIO.hpp"
 
@@ -52,12 +52,16 @@ unsigned int PiGPIO::translate_mode(Modes mode) {
   throw std::runtime_error(
       fmt::format("Can't translate mode {}", static_cast<int>(mode)));
 }
-void PiGPIO::set_gpio_mode(port_id_t port, Modes mode) {
+void PiGPIO::set_gpio_mode(port_id_t port, Modes mode, val_t initial) {
   ensure_running();
   if (const auto res = gpioSetMode(port, translate_mode(mode)); res != 0) {
-    const auto msg = fmt::format(
-        "Failed to set GPIO mode {} on port {} (error: {}) ", translate_mode(mode), port, res);
+    const auto msg =
+        fmt::format("Failed to set GPIO mode {} on port {} (error: {}) ",
+                    translate_mode(mode), port, res);
     throw std::runtime_error(msg);
+  }
+  if (mode == Modes::OUTPUT) {
+    gpio_write(port, initial);
   }
 }
 void PiGPIO::gpio_write(port_id_t gpio, val_t val) {
