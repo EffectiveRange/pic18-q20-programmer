@@ -1,6 +1,6 @@
 
 
-add_library(mockgpio STATIC src/MockGPIO.cpp src/MockPIC18Q20.cpp)
+add_library(mockgpio OBJECT src/MockGPIO.cpp src/MockPIC18Q20.cpp)
 
 target_include_directories(mockgpio PUBLIC include)
 

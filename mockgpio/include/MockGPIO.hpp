@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #pragma once
 
@@ -68,7 +68,7 @@ struct MockGPIO : public IGPIO {
 
   static void ensure_running();
 
-  void set_gpio_mode(port_id_t port, Modes mode) override;
+  void set_gpio_mode(port_id_t port, Modes mode, val_t initial) override;
 
   void gpio_write(port_id_t gpio, val_t val) override;
 
