@@ -49,7 +49,8 @@ void MockGPIO::load_mock_buffer() {
     }
   }
 }
-__attribute__((weak)) auto IGPIO::Create() -> Ptr {
+
+__attribute__((weak)) IGPIO::Ptr IGPIO::Create() {
   auto gpio = MockGPIO::Create();
   gpio->pic = std::make_unique<MockPIC18Q20>(gpio.get(), ICSPPins{});
   gpio->load_mock_buffer();

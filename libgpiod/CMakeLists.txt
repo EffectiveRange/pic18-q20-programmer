@@ -4,7 +4,7 @@ if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "arm64")
     pkg_check_modules(LIBGPIO REQUIRED libgpiodcxx)
     message(STATUS "Found libgpiod library: ${LIBGPIO_LIBRARIES}")
     # Include the library in your project
-    add_library(libgpioimpl STATIC libGPIO.cpp)
+    add_library(libgpioimpl OBJECT libGPIO.cpp)
 
     target_link_libraries(libgpioimpl PUBLIC igpio rt ${LIBGPIO_LINK_LIBRARIES} PRIVATE fmt::fmt)
     

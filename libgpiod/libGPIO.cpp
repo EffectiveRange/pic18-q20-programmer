@@ -3,6 +3,7 @@
 // <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #include "libGPIO.hpp"
+#include "IGPIO.hpp"
 
 #include <IGPIO.hpp>
 
@@ -30,7 +31,7 @@ void catch_signals(int sig) {
 
 } // namespace
 
-auto IGPIO::Create() -> Ptr { return std::make_shared<LibGPIO>(); }
+IGPIO::Ptr IGPIO::Create() { return std::make_shared<LibGPIO>(); }
 
 LibGPIO::LibGPIO(std::string_view device)
     : m_handle(::gpiod::chip(std::string(device))) {}
