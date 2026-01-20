@@ -22,4 +22,4 @@ on:
 
 jobs:
  call_ci:
-  uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@v5
+  uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@latest-cmake
