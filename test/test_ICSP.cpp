@@ -4,7 +4,7 @@
 #include "MockPIC18Q20.hpp"
 #include "PIC18-Q20.hpp"
 #include "Region.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <csignal>
 #include <cstdint>
 

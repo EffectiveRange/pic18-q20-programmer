@@ -23,3 +23,5 @@ on:
 jobs:
  call_ci:
   uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@latest-cmake
+  with:
+    build-version: '["amd64-trixie", "arm64-trixie"]'

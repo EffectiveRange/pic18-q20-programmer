@@ -1,6 +1,6 @@
 #include "PIC18-Q20.hpp"
 #include "Region.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include <cstdint>
 #include <iostream>

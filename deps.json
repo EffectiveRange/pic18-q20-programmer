@@ -6,14 +6,28 @@
             "arch": [
                 "armhf"
             ]
-        },
-        {
-            "name": "libgpiod2",
-            "arch": [
-                "arm64"
-            ]
         }
     ],
+    "bookworm": {
+        "deps": [
+            {
+                "name": "libgpiod2",
+                "arch": [
+                    "arm64"
+                ]
+            }
+        ]
+    },
+    "trixie": {
+        "deps": [
+            {
+                "name": "libgpiod3",
+                "arch": [
+                    "arm64"
+                ]
+            }
+        ]
+    },
     "build_deps": [
         {
             "name": "libpigpio-dev",

@@ -25,7 +25,7 @@ struct LibGPIO : public IGPIO {
   void delay(std::chrono::microseconds) override;
 
 private:
-  gpiod::line &get_line(port_id_t gpio);
+  gpiod::line_request &get_line(port_id_t gpio);
   gpiod::chip m_handle;
-  std::map<port_id_t, gpiod::line> m_lines;
+  std::map<port_id_t, gpiod::line_request> m_lines;
 };

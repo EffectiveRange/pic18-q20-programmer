@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include <ICSP_header.hpp>
 #include <PIC18-Q20.hpp>

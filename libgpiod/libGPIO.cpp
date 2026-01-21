@@ -11,6 +11,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <exception>
+#include <filesystem>
 #include <fmt/format.h>
 #include <thread>
 
@@ -21,6 +22,7 @@
 
 #include <gpiod.hpp>
 
+namespace fs = std::filesystem;
 namespace {
 volatile sig_atomic_t s_interrupted = 0;
 
@@ -34,7 +36,7 @@ void catch_signals(int sig) {
 IGPIO::Ptr IGPIO::Create() { return std::make_shared<LibGPIO>(); }
 
 LibGPIO::LibGPIO(std::string_view device)
-    : m_handle(::gpiod::chip(std::string(device))) {}
+    : m_handle(::gpiod::chip(fs::path("/dev") / device)) {}
 
 void LibGPIO::set_gpio_mode(port_id_t port, Modes mode, val_t initial) {
   ensure_running();
@@ -42,24 +44,33 @@ void LibGPIO::set_gpio_mode(port_id_t port, Modes mode, val_t initial) {
     throw std::runtime_error(
         "Only INPUT and OUTPUT modes are supported for libgpiod for now.");
   }
-  auto direction = mode == Modes::INPUT ? gpiod::line::DIRECTION_INPUT
-                                        : gpiod::line::DIRECTION_OUTPUT;
-  auto &line = get_line(port);
-  if (direction == gpiod::line::DIRECTION_OUTPUT) {
-    line.set_direction_output(initial);
+  auto direction = mode == Modes::INPUT ? gpiod::line::direction::INPUT
+                                        : gpiod::line::direction::OUTPUT;
+  gpiod::line_settings s;
+  if (mode == Modes::OUTPUT) {
+    s.set_direction(gpiod::line::direction::OUTPUT);
+    s.set_output_value(initial ? gpiod::line::value::ACTIVE
+                               : gpiod::line::value::INACTIVE);
   } else {
-    line.set_direction_input();
+    s.set_direction(gpiod::line::direction::INPUT);
   }
+  auto &req = get_line(port);
+  gpiod::line_config cfg;
+  cfg.add_line_settings(port, s);
+  req.reconfigure_lines(cfg);
 }
 
 void LibGPIO::gpio_write(port_id_t gpio, val_t val) {
   ensure_running();
-  get_line(gpio).set_value(val);
+  auto &req = get_line(gpio);
+  req.set_value(gpio, val ? gpiod::line::value::ACTIVE
+                          : gpiod::line::value::INACTIVE);
 }
 
 auto LibGPIO::gpio_read(port_id_t gpio) -> val_t {
   ensure_running();
-  return get_line(gpio).get_value();
+  auto &req = get_line(gpio);
+  return (req.get_value(gpio) == gpiod::line::value::ACTIVE) ? 1 : 0;
 }
 void LibGPIO::delay(std::chrono::microseconds delay) {
 
@@ -76,15 +87,20 @@ void LibGPIO::ensure_running() {
     throw Interrupted{};
   }
 }
-gpiod::line &LibGPIO::get_line(port_id_t gpio) {
+gpiod::line_request &LibGPIO::get_line(port_id_t gpio) {
 
   auto it = m_lines.find(gpio);
   if (it != m_lines.end()) {
     return it->second;
   }
-  auto line = m_handle.get_line(gpio);
-  line.request({.consumer = "pic18-q20-programmer",
-                .request_type = gpiod::line_request::DIRECTION_AS_IS});
-  auto res = m_lines.insert({gpio, std::move(line)});
-  return res.first->second;
+  gpiod::line_settings s;
+  s.set_direction(gpiod::line::direction::AS_IS);
+
+  auto req = m_handle.prepare_request()
+                 .set_consumer("pic18-q20-programmer")
+                 .add_line_settings(gpio, s)
+                 .do_request();
+
+  auto [ins_it, _] = m_lines.emplace(gpio, std::move(req));
+  return ins_it->second;
 }

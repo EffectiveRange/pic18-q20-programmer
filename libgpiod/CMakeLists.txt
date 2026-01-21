@@ -12,7 +12,7 @@ if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "arm64")
 
     target_include_directories(libgpioimpl PUBLIC  ${LIBGPIO_INCLUDE_DIRS} PRIVATE include)
 
-    add_executable(libgpio_test  main.cpp )
+    ER_ADD_EXECUTABLE(libgpio_test SOURCES  main.cpp )
 
     target_link_libraries(libgpio_test libgpioimpl argparse fmt::fmt)
 
