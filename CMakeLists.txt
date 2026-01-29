@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 
-include(ERBuild NO_POLICY_SCOPE)
-
 set(picprogrammer_ver 0.5.2)
 
 project(picprogrammer VERSION ${picprogrammer_ver} DESCRIPTION "This project can be used to program the onboard PIC microcontroller")
+
+include(ERBuild NO_POLICY_SCOPE)
 
 
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
@@ -21,6 +21,8 @@ find_package(fmt REQUIRED)
 find_package(Catch2  REQUIRED)
 
 find_package(PkgConfig REQUIRED)
+
+find_package(er-hwinfo REQUIRED)
 
 # fetch latest argparse
 include(FetchContent)

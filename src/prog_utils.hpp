@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #pragma once
 
@@ -12,6 +12,8 @@
 #include <argparse/argparse.hpp>
 #include <concepts>
 #include <fmt/format.h>
+
+#include <er/hwinfo.hpp>
 
 #include <filesystem>
 #include <iosfwd>
@@ -25,16 +27,60 @@ template <std::integral T> Verbosity verbosity(T val) {
       std::clamp(val, 0, static_cast<T>(Verbosity::MAX)));
 }
 
-inline auto icsp_pins(argparse::ArgumentParser const &parser) {
-  ICSPPins pins{};
-  pins.clk_pin = parser.get<unsigned>("--gpio-clk");
-  pins.mclr_pin = parser.get<unsigned>("--gpio-mclr");
-  pins.data_pin = parser.get<unsigned>("--gpio-data");
-  if (parser["--no-gpio-prog-en"] == true) {
-    pins.prog_en_pin = std::nullopt;
-  } else {
-    pins.prog_en_pin = parser.get<unsigned>("--gpio-prog-en");
+namespace icsp_pin_names {
+inline constexpr auto &CLK = "ICSP_CLK";
+inline constexpr auto &DATA = "ICSP_DATA";
+inline constexpr auto &MCLR = "ICSP_MCLR";
+inline constexpr auto &PROG_EN = "ICSP_PROG_EN";
+} // namespace icsp_pin_names
+
+/// @brief Get ICSP pin from hwinfo by name
+/// @return pin number if found, std::nullopt otherwise
+inline std::optional<unsigned> get_hwinfo_pin(er::hwinfo::info const &info,
+                                              std::string_view pin_name) {
+  auto it = info.pins.find(pin_name);
+  if (it != info.pins.end()) {
+    return static_cast<unsigned>(it->number);
   }
+  return std::nullopt;
+}
+
+// Resolve pin: CLI override > hwinfo > throw
+inline unsigned resolve_pin(std::optional<er::hwinfo::info> const &info,
+                            argparse::ArgumentParser const &parser,
+                            std::string_view cli_arg,
+                            std::string_view hwinfo_name) {
+  if (auto cli_val = parser.present<unsigned>(cli_arg)) {
+    return *cli_val;
+  }
+  if (info) {
+    if (auto hw_val = get_hwinfo_pin(*info, hwinfo_name)) {
+      return *hw_val;
+    }
+  }
+  throw std::runtime_error(fmt::format(
+      "Missing required ICSP pin: {} (or {} in hwdb)", cli_arg, hwinfo_name));
+};
+
+/// @brief Build ICSPPins from hwinfo with optional CLI overrides
+/// @param info Hardware info (may be nullopt if device tree not available)
+/// @param parser Argument parser for CLI overrides
+/// @return ICSPPins with all values populated from hwinfo and/or CLI
+/// @throws std::runtime_error if required pins are missing
+inline auto icsp_pins(std::optional<er::hwinfo::info> const &info,
+                      argparse::ArgumentParser const &parser) {
+
+  ICSPPins pins{};
+  pins.clk_pin = resolve_pin(info, parser, "--gpio-clk", icsp_pin_names::CLK);
+  pins.data_pin =
+      resolve_pin(info, parser, "--gpio-data", icsp_pin_names::DATA);
+  pins.mclr_pin =
+      resolve_pin(info, parser, "--gpio-mclr", icsp_pin_names::MCLR);
+  pins.prog_en_pin =
+      parser["--no-gpio-prog-en"] == true
+          ? std::nullopt
+          : std::make_optional(resolve_pin(info, parser, "--gpio-prog-en",
+                                           icsp_pin_names::PROG_EN));
   return pins;
 }
 

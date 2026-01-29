@@ -10,18 +10,16 @@
 name: CI/CD
 
 on:
-  push:
-      branches: main
-      tags: v*.*.*
+    push:
+        branches: [main]
+        tags: [v*.*.*]
 
-  pull_request:
-      types:
-          - synchronize
-          - opened
-          - reopened
+    pull_request:
+        types:
+            - synchronize
+            - opened
+            - reopened
 
 jobs:
- call_ci:
-  uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@latest-cmake
-  with:
-    build-version: '["amd64-trixie", "arm64-trixie"]'
+    call_ci:
+        uses: EffectiveRange/ci-workflows/.github/workflows/cmake-ci.yaml@latest-cmake

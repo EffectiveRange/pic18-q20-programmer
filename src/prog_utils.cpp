@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #include "prog_utils.hpp"
 
@@ -70,6 +70,12 @@ std::unique_ptr<AugmentedParser> get_parser() {
       0});
 
   auto *program = &parser->parser;
+  program->add_argument("--device-tree")
+      .help("path to the device tree file to use")
+      .default_value(std::string{"/proc/device-tree"});
+  program->add_argument("--hwdb-path")
+      .help("path to the hardware description directory")
+      .default_value(std::string{"/etc/er-hwinfo"});
   program->add_argument("--headers")
       .help("dumps static section header information, then exits")
       .flag();
@@ -132,20 +138,14 @@ std::unique_ptr<AugmentedParser> get_parser() {
 
   program->add_argument("--gpio-clk")
       .help("GPIO pin number to be used for the ICSP CLK line")
-      .required()
-      .default_value(ICSPPins{}.clk_pin)
       .scan<'i', unsigned>();
 
   program->add_argument("--gpio-data")
       .help("GPIO pin number to be used for the ICSP DATA line")
-      .required()
-      .default_value(ICSPPins{}.data_pin)
       .scan<'i', unsigned>();
 
   program->add_argument("--gpio-mclr")
       .help("GPIO pin number to be used for the ICSP MCLR line")
-      .required()
-      .default_value(ICSPPins{}.mclr_pin)
       .scan<'i', unsigned>();
 
   auto &prog_en_group = program->add_mutually_exclusive_group();
@@ -153,8 +153,6 @@ std::unique_ptr<AugmentedParser> get_parser() {
   prog_en_group.add_argument("--gpio-prog-en")
       .help("GPIO pin number to be used for the PROG EN line (EXT/INT ICSP "
             "header)")
-      .required()
-      .default_value(ICSPPins{}.prog_en_pin.value())
       .scan<'i', unsigned>();
 
   prog_en_group.add_argument("--no-gpio-prog-en")

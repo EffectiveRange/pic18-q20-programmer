@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2024 Ferenc Nandor Janky <ferenj@effective-range.com>
-// SPDX-FileCopyrightText: 2024 Attila Gombos <attila.gombos@effective-range.com>
-// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2024 Attila Gombos
+// <attila.gombos@effective-range.com> SPDX-License-Identifier: MIT
 
 #include <iostream>
 #include <ostream>
+
+#include <er/hwinfo.hpp>
 
 #include "prog_utils.hpp"
 
@@ -23,10 +25,16 @@ int main(int argc, char *argv[]) try {
     print_headers(std::cout, pic18fq20);
     return 0;
   }
-
+  const auto hwdb_path =
+      std::filesystem::path(parser.get<std::string>("--hwdb-path"));
+  const auto device_tree_path =
+      std::filesystem::path(parser.get<std::string>("--device-tree"));
+  const auto info =
+      er::hwinfo::get(device_tree_path, hwdb_path / "hwdb.json",
+                      hwdb_path / "hwdb-schema.json"); // initialize hwinfo
   auto fw = get_fw_file(parser);
   const auto extra_erease = extra_erease_regions(parser);
-  const auto pins = icsp_pins(parser);
+  const auto pins = icsp_pins(info, parser);
 
   if (parser["--info"] == true) {
     emitInfo(fw, pins);

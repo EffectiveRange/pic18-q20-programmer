@@ -43,6 +43,8 @@
         },
         "libfmt-dev",
         "catch2",
-        "librange-v3-dev"
+        "librange-v3-dev",
+        "er-hwinfo-dev",
+        "er-hwinfo-db"
     ]
 }
