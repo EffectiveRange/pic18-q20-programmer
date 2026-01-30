@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-set(picprogrammer_ver 0.5.2)
+set(picprogrammer_ver 1.0.0)
 
 project(picprogrammer VERSION ${picprogrammer_ver} DESCRIPTION "This project can be used to program the onboard PIC microcontroller")
 
