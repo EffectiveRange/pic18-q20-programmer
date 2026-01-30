@@ -6,7 +6,8 @@
             "arch": [
                 "armhf"
             ]
-        }
+        },
+        "er-hwinfo-db"
     ],
     "bookworm": {
         "deps": [
@@ -44,7 +45,6 @@
         "libfmt-dev",
         "catch2",
         "librange-v3-dev",
-        "er-hwinfo-dev",
-        "er-hwinfo-db"
+        "er-hwinfo-dev"
     ]
 }

@@ -46,7 +46,7 @@ add_subdirectory(libgpiod)
 
 
 
-target_link_libraries(picprogrammer icsp igpio fmt::fmt argparse mockgpio )
+target_link_libraries(picprogrammer icsp igpio fmt::fmt argparse mockgpio)
 
 
 target_include_directories(picprogrammer PRIVATE  include)
